@@ -1,4 +1,4 @@
-package com.scaler.productservicedecmwfeve.models;
+package com.scaler.productservice.models;
 
 import lombok.Getter;
 import lombok.Setter;
