@@ -28,28 +28,22 @@ public class ProductController {
 
     @PostMapping()
     public Product addNewProduct(@RequestBody Product product) {
-        Product p = new Product();
-        p.setTitle(product.getTitle());
-        return p;
+        return fakeProductServices.addProduct(product);
     }
 
     @PatchMapping("/{id}")
     public Product updateProduct(@PathVariable("id") Long id, @RequestBody Product product) {
-        Product temp = fakeProductServices.fetchSingleProduct(id);
-        if (product.getCategory().getName() != null) temp.setCategory(product.getCategory());
-        return temp;
+        return fakeProductServices.patchProduct(id, product);
     }
 
     @PutMapping("/{id}")
     public Product replaceProduct(@PathVariable("id") Long id, @RequestBody Product product) {
-        Product temp = fakeProductServices.fetchSingleProduct(id);
-        temp.setTitle(product.getTitle());
-        return temp;
+        return fakeProductServices.putProduct(id, product);
     }
 
     @DeleteMapping("/{id}")
     public void deleteProduct(@PathVariable("id") Long id) {
-        System.out.println("Product deleted with id: " + id);
+        fakeProductServices.deleteProduct(id);
     }
 
 

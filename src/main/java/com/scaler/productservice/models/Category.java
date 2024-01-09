@@ -8,9 +8,4 @@ import lombok.Setter;
 public class Category {
     private Long id;
     private String name;
-
-//    public String getName() {
-//        System.out.println( userName + " has called this method.");
-//        System.out.println("nothi");
-//    }
 }

@@ -8,4 +8,12 @@ public interface FakeProductServices {
     Product fetchSingleProduct(Long id);
 
     List<Product> fetchAllProducts();
+
+    Product addProduct(Product product);
+
+    Product patchProduct(Long id, Product product);
+
+    Product putProduct(Long id, Product product);
+
+    void deleteProduct(Long id);
 }
