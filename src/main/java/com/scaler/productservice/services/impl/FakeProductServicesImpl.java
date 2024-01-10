@@ -1,6 +1,7 @@
 package com.scaler.productservice.services.impl;
 
 import com.scaler.productservice.dtos.FakeStoreDTO;
+import com.scaler.productservice.exceptions.NoProductFoundForGivenId;
 import com.scaler.productservice.models.Category;
 import com.scaler.productservice.models.Product;
 import com.scaler.productservice.services.FakeProductServices;
@@ -9,12 +10,18 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 @Service
 public class FakeProductServicesImpl implements FakeProductServices {
     public static final String FAKE_STORE_URL = "https://fakestoreapi.com/products";
+    public static final String FAKE_STORE_CATEGORIES_URL = FAKE_STORE_URL + "/categories";
     private final RestTemplate restTemplate;
 
     public FakeProductServicesImpl(RestTemplate restTemplate) {
@@ -22,10 +29,11 @@ public class FakeProductServicesImpl implements FakeProductServices {
     }
 
     @Override
-    public Product fetchSingleProduct(Long id) {
+    public Product fetchSingleProduct(Long id) throws NoProductFoundForGivenId {
         FakeStoreDTO fakeStoreDTO = restTemplate.getForObject(FAKE_STORE_URL + "/" + id,
                 FakeStoreDTO.class);
 
+        if (fakeStoreDTO == null) throw new NoProductFoundForGivenId("No product found with given ID!");
         return convertProductDtoToProduct(fakeStoreDTO);
     }
 
@@ -35,6 +43,26 @@ public class FakeProductServicesImpl implements FakeProductServices {
                 FakeStoreDTO[].class);
 
         return convertAllProductDtoToProduct(fakeStoreDTOList);
+    }
+
+    @Override
+    public List<Category> fetchAllCategories() {
+        String[] categoriesList = restTemplate.getForObject(FAKE_STORE_CATEGORIES_URL,
+                String[].class);
+
+        AtomicReference<Long> id = new AtomicReference<>(1L);
+        if (categoriesList == null)
+            return new ArrayList<>();
+
+//        BigDecimal test = BigDecimal.ONE.divide(BigDecimal.ZERO, RoundingMode.HALF_DOWN);
+        return Arrays.stream(categoriesList)
+                .map(category -> {
+                    Category obj = new Category();
+                    obj.setId(id.get());
+                    obj.setName(category);
+                    id.getAndSet(id.get() + 1);
+                    return obj;
+                }).collect(Collectors.toList());
     }
 
     @Override

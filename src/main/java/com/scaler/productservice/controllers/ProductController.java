@@ -1,5 +1,7 @@
 package com.scaler.productservice.controllers;
 
+import com.scaler.productservice.exceptions.NoProductFoundForGivenId;
+import com.scaler.productservice.models.Category;
 import com.scaler.productservice.models.Product;
 import com.scaler.productservice.services.FakeProductServices;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +24,13 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public Product getSingleProduct(@PathVariable("id") Long id) {
+    public Product getSingleProduct(@PathVariable("id") Long id) throws NoProductFoundForGivenId {
         return fakeProductServices.fetchSingleProduct(id);
+    }
+
+    @GetMapping("/categories")
+    public List<Category> getAllCategories() {
+        return fakeProductServices.fetchAllCategories();
     }
 
     @PostMapping()
