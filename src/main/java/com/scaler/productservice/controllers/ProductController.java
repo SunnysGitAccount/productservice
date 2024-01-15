@@ -1,9 +1,9 @@
 package com.scaler.productservice.controllers;
 
 import com.scaler.productservice.exceptions.NoProductFoundForGivenId;
-import com.scaler.productservice.models.Category;
 import com.scaler.productservice.models.Product;
 import com.scaler.productservice.services.FakeProductServices;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,23 +28,18 @@ public class ProductController {
         return fakeProductServices.fetchSingleProduct(id);
     }
 
-    @GetMapping("/categories")
-    public List<Category> getAllCategories() {
-        return fakeProductServices.fetchAllCategories();
-    }
-
     @PostMapping()
-    public Product addNewProduct(@RequestBody Product product) {
+    public Product addNewProduct(@Validated @RequestBody Product product) {
         return fakeProductServices.addProduct(product);
     }
 
     @PatchMapping("/{id}")
-    public Product updateProduct(@PathVariable("id") Long id, @RequestBody Product product) {
+    public Product updateProduct(@PathVariable("id") Long id, @RequestBody Product product) throws NoProductFoundForGivenId {
         return fakeProductServices.patchProduct(id, product);
     }
 
     @PutMapping("/{id}")
-    public Product replaceProduct(@PathVariable("id") Long id, @RequestBody Product product) {
+    public Product replaceProduct(@PathVariable("id") Long id, @RequestBody Product product) throws NoProductFoundForGivenId {
         return fakeProductServices.putProduct(id, product);
     }
 
