@@ -37,10 +37,7 @@ public class FakeProductJpaServiceImpl implements FakeProductServices {
     public Product addProduct(Product product) {
         Optional<Category> savedOptionalCategory = categoryRepository.findByName(product.getCategory().getName());
 
-        if (savedOptionalCategory.isEmpty())
-            categoryRepository.save(product.getCategory());
-        else
-            product.setCategory(savedOptionalCategory.get());
+        savedOptionalCategory.ifPresent(product::setCategory);
 
         return productRepository.save(product);
     }
