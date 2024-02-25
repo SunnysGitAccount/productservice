@@ -5,6 +5,7 @@ import com.scaler.productservice.exceptions.NoProductFoundForGivenId;
 import com.scaler.productservice.models.Category;
 import com.scaler.productservice.models.Product;
 import com.scaler.productservice.services.FakeProductServices;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
@@ -16,11 +17,7 @@ import java.util.List;
 @Service
 public class FakeProductServicesImpl implements FakeProductServices {
     public static final String FAKE_STORE_URL = "https://fakestoreapi.com/products";
-    private final RestTemplate restTemplate;
-
-    public FakeProductServicesImpl(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
+    private final RestTemplate restTemplate = new RestTemplate();
 
     @Override
     public Product fetchSingleProduct(Long id) throws NoProductFoundForGivenId {

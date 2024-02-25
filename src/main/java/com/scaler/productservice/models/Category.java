@@ -1,10 +1,8 @@
 package com.scaler.productservice.models;
 
-import jakarta.persistence.CascadeType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,12 +12,8 @@ import java.util.List;
 @Setter
 @Entity
 public class Category extends BaseModel {
-    @NotNull
-    @NotEmpty
     private String name;
-    @OneToMany(mappedBy = "category",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
+    @OneToMany(mappedBy = "category")
+    @JsonIgnore
     private List<Product> products;
 }

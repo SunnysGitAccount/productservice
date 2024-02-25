@@ -1,37 +1,27 @@
 package com.scaler.productservice.controllers;
 
-import com.scaler.productservice.exceptions.NoCategoryFoundForGivenId;
-import com.scaler.productservice.models.Category;
-import com.scaler.productservice.services.FakeCategoryServices;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import com.scaler.productservice.services.FakeCategoryService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequiredArgsConstructor
-@RequestMapping("/categories")
+@RequestMapping("/products/categories")
 public class CategoryController {
-    private final FakeCategoryServices fakeCategoryServices;
+    private final FakeCategoryService fakeCategoryService;
+
+    public CategoryController(FakeCategoryService fakeCategoryService) {
+        this.fakeCategoryService = fakeCategoryService;
+    }
+
     @GetMapping
-    public List<Category> getAllCategories() {
-        return fakeCategoryServices.fetchAllCategories();
+    public String[] getCategories() {
+        return fakeCategoryService.getAllCategories();
     }
 
     @GetMapping("/{id}")
-    public Category getCategoryById(@PathVariable("id") Long id) throws NoCategoryFoundForGivenId {
-        return fakeCategoryServices.fetchCategoryById(id);
-    }
-
-    @PatchMapping("/{id}")
-    public Category patchCategoryById(@PathVariable("id") Long id,
-                                      @RequestBody Category category) throws NoCategoryFoundForGivenId {
-        return fakeCategoryServices.modifyCategoryForGivenId(id, category);
-    }
-
-    @PutMapping("/{id}")
-    public Category putCategoryById(@PathVariable("id") Long id,
-                                    @RequestBody Category category) {
-        return fakeCategoryServices.replaceCategoryForGivenId(id, category);
+    public String getCategory(@PathVariable("id") Long id) {
+        return fakeCategoryService.getCategory(id);
     }
 }

@@ -6,7 +6,6 @@ import com.scaler.productservice.models.Product;
 import com.scaler.productservice.repository.CategoryRepository;
 import com.scaler.productservice.repository.ProductRepository;
 import com.scaler.productservice.services.FakeProductServices;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -16,11 +15,15 @@ import java.util.Optional;
 
 @Service
 @Primary
-@RequiredArgsConstructor
 public class FakeProductJpaServiceImpl implements FakeProductServices {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+
+    public FakeProductJpaServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository) {
+        this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
+    }
 
     @Override
     public Product fetchSingleProduct(Long id) throws NoProductFoundForGivenId {
@@ -36,9 +39,7 @@ public class FakeProductJpaServiceImpl implements FakeProductServices {
     @Override
     public Product addProduct(Product product) {
         Optional<Category> savedOptionalCategory = categoryRepository.findByName(product.getCategory().getName());
-
         savedOptionalCategory.ifPresent(product::setCategory);
-
         return productRepository.save(product);
     }
 
@@ -55,7 +56,7 @@ public class FakeProductJpaServiceImpl implements FakeProductServices {
         if (StringUtils.hasText(product.getImageUrl()))
             savedProduct.setImageUrl(product.getImageUrl());
 
-        return addProduct(savedProduct);
+        return productRepository.save(savedProduct);
     }
 
     @Override
